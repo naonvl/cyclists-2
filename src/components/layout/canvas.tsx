@@ -7,17 +7,18 @@ const LControl = () => {
   const dom = useStore((state) => state.dom)
   const control = useRef(null)
 
-  // useEffect(() => {
-  //   if (control.current) {
-  //     const domElement = dom.current
-  //     const originalTouchAction = domElement.style['touch-action']
-  //     domElement.style['touch-action'] = 'auto'
+  useEffect(() => {
+    if (control.current) {
+      const domElement = dom.current
+      const originalTouchAction = domElement.style['touch-action']
+      console.log(originalTouchAction)
+      domElement.style['touch-action'] = 'auto'
 
-  //     return () => {
-  //       domElement.style['touch-action'] = originalTouchAction
-  //     }
-  //   }
-  // }, [dom, control])
+      return () => {
+        domElement.style['touch-action'] = 'auto'
+      }
+    }
+  }, [dom, control])
   // @ts-ignore
   return <OrbitControls ref={control} domElement={dom.current} />
 }
@@ -31,9 +32,9 @@ const LCanvas = ({ children, style }) => {
       camera={{ position: [0, 0, 500], fov: 30 }}
       style={style}
       id='rendered'
-      onCreated={(state) => state.events.connect(dom.current)}
+      // onCreated={(state) => state.events.connect(dom.current)}
     >
-      <LControl />
+      {/* <LControl /> */}
       <Preload all />
       {children}
     </Canvas>

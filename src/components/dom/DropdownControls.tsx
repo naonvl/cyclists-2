@@ -79,11 +79,7 @@ const DropdownControls: React.FC<DropdownsProps> = ({
               onClick={zoomInClick}
               // disabled={zoom < 20 ? true : false}
             >
-              <ZoomInIcon
-                className={cn('w-5 h-5', {
-                  ['opacity-30']: zoom < 20,
-                })}
-              />
+              <ZoomInIcon className={cn('w-5 h-5')} />
             </button>
             <button
               type='button'
@@ -91,11 +87,7 @@ const DropdownControls: React.FC<DropdownsProps> = ({
               onClick={zoomOutClick}
               disabled={zoom > 88 ? true : false}
             >
-              <ZoomOutIcon
-                className={cn('w-5 h-5', {
-                  ['opacity-30']: zoom > 88,
-                })}
-              />
+              <ZoomOutIcon className={cn('w-5 h-5')} />
             </button>
             <button
               type='button'

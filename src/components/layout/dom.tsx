@@ -7,11 +7,7 @@ const Dom = ({ children }) => {
     setState({ dom: ref })
   }, [])
 
-  return (
-    <div className='!touch-auto' ref={ref}>
-      {children}
-    </div>
-  )
+  return <div ref={ref}>{children}</div>
 }
 
 export default Dom
