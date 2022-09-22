@@ -270,13 +270,6 @@ const ShirtComponent = ({ props }: ShirtProps) => {
         enableZoom={true}
         enablePan={false}
       />
-      {/* <Dolly
-        isObjectFront={isObjectFront}
-        cameraChanged={cameraChanged}
-        setCameraChange={setCameraChange}
-        zoom={zoom}
-        setZoom={setZoom}
-      /> */}
       <AdaptiveDpr />
       <Stats showPanel={0} />
     </>
