@@ -7,6 +7,11 @@ const withPWA = require('next-pwa')({
   disable: process.env.NODE_ENV === 'development',
 })
 
+const withImages = require('next-images')
+
+// Optional 'next-transpile-modules'
+const withTM = require('next-transpile-modules')(['three'])
+
 const nextConfig = {
   webpack(config, { isServer }) {
     // audio support
@@ -59,7 +64,7 @@ const KEYS_TO_OMIT = [
 ]
 
 module.exports = (_phase, { defaultConfig }) => {
-  const plugins = [[withPWA], [withBundleAnalyzer, {}]]
+  const plugins = [[withPWA], [withBundleAnalyzer, {}], [withTM], [withImages]]
 
   const wConfig = plugins.reduce(
     (acc, [plugin, config]) => plugin({ ...acc, ...config }),

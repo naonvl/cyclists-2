@@ -7,30 +7,30 @@ const LControl = () => {
   const dom = useStore((state) => state.dom)
   const control = useRef(null)
 
-  useEffect(() => {
-    if (control.current) {
-      const domElement = dom.current
-      const originalTouchAction = domElement.style['touch-action'] 
-      domElement.style['touch-action'] = 'none'
+  // useEffect(() => {
+  //   if (control.current) {
+  //     const domElement = dom.current
+  //     const originalTouchAction = domElement.style['touch-action']
+  //     domElement.style['touch-action'] = 'auto'
 
-      return () => {
-        domElement.style['touch-action'] = originalTouchAction
-      }
-    }
-  }, [dom, control])
+  //     return () => {
+  //       domElement.style['touch-action'] = originalTouchAction
+  //     }
+  //   }
+  // }, [dom, control])
   // @ts-ignore
   return <OrbitControls ref={control} domElement={dom.current} />
 }
-const LCanvas = ({ children }) => {
+const LCanvas = ({ children, style }) => {
   const dom = useStore((state) => state.dom)
 
   return (
     <Canvas
-      mode='concurrent'
-      style={{
-        position: 'absolute',
-        top: 0,
-      }}
+      frameloop='demand'
+      performance={{ min: 0.1, max: 0.3 }}
+      camera={{ position: [0, 0, 500], fov: 30 }}
+      style={style}
+      id='rendered'
       onCreated={(state) => state.events.connect(dom.current)}
     >
       <LControl />

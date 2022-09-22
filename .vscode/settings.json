@@ -5,5 +5,7 @@
     "source.fixAll": true
   },
   "eslint.validate": ["javascript"],
-  "eslint.workingDirectories": [{ "mode": "auto" }]
+  "eslint.workingDirectories": [{ "mode": "auto" }],
+  "css.lint.unknownAtRules": "ignore",
+  "jshint.enable": false
 }
