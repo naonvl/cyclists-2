@@ -66,7 +66,6 @@ const Page = (props) => {
   })
 
   useEffect(() => {
-    if (!isLoading) {
       switch (step) {
         case 1:
           return setDropdownOpen({
@@ -93,7 +92,6 @@ const Page = (props) => {
             stepTwo: false,
             stepThree: false,
           })
-      }
     }
   }, [isLoading, setIsLoading, step])
 
