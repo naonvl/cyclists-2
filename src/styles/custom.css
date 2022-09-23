@@ -1,3 +1,10 @@
 .canvas-container {
   display: none;
 }
+
+.loader {
+  transform: none !important;
+  top: -24rem !important;
+  left: -27rem !important;
+  position: relative !important;
+}

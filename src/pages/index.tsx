@@ -48,6 +48,10 @@ const Page = (props) => {
   const setCameraChange = useStore((state) => state.setCameraChange)
   const isLoading = useStore((state) => state.isLoading)
   const setIsLoading = useStore((state) => state.setIsLoading)
+  const svgGroup = useStore((state) => state.svgGroup)
+  const setColorChanged = useStore((state) => state.setColorChanged)
+  const canvas = useStore((state) => state.canvas)
+  const colors = useStore((state) => state.colors)
 
   const inputNumberRef = useRef<HTMLInputElement>(null)
 
@@ -66,32 +70,32 @@ const Page = (props) => {
   })
 
   useEffect(() => {
-      switch (step) {
-        case 1:
-          return setDropdownOpen({
-            stepOne: true,
-            stepTwo: false,
-            stepThree: false,
-          })
-        case 2:
-          return setDropdownOpen({
-            stepOne: false,
-            stepTwo: true,
-            stepThree: false,
-          })
-        case 3:
-          return setDropdownOpen({
-            stepOne: false,
-            stepTwo: false,
-            stepThree: true,
-          })
+    switch (step) {
+      case 1:
+        return setDropdownOpen({
+          stepOne: true,
+          stepTwo: false,
+          stepThree: false,
+        })
+      case 2:
+        return setDropdownOpen({
+          stepOne: false,
+          stepTwo: true,
+          stepThree: false,
+        })
+      case 3:
+        return setDropdownOpen({
+          stepOne: false,
+          stepTwo: false,
+          stepThree: true,
+        })
 
-        default:
-          return setDropdownOpen({
-            stepOne: true,
-            stepTwo: false,
-            stepThree: false,
-          })
+      default:
+        return setDropdownOpen({
+          stepOne: true,
+          stepTwo: false,
+          stepThree: false,
+        })
     }
   }, [isLoading, setIsLoading, step])
 
@@ -102,6 +106,7 @@ const Page = (props) => {
 
   const handleChangeTexture = (index: number) => {
     setTexturePath(index)
+    setIsLoading(true)
   }
 
   const decrementAction = () => {
@@ -343,115 +348,39 @@ const Page = (props) => {
               label='stepTwo'
             >
               <div className='flex flex-col overflow-hidden'>
-                <div className='inline-flex items-center justify-between w-full'>
-                  <ColorPicker color={{ r: 241, g: 19, b: 127, a: 100 }} />
-                  <Text className='font-bold text-gray-600'>
-                    Main Colour or{' '}
-                    <span className='underline cursor-pointer'>
-                      Choose Pattern
-                    </span>
-                  </Text>
-                  <Image
-                    alt='Cyclist Cusotm Jersey'
-                    src='/icons/kein-muster.svg'
-                    width='100%'
-                    height={35}
-                    layout='fill'
-                    style={{
-                      maxWidth: '60px',
-                    }}
-                    objectFit='contain'
-                    quality={60}
-                  />
-                </div>
-
-                <div className='inline-flex items-center justify-between w-full'>
-                  <ColorPicker color={{ r: 19, g: 218, b: 127, a: 100 }} />
-                  <Text className='font-bold text-gray-600'>
-                    2nd Colour or{' '}
-                    <span className='underline cursor-pointer'>
-                      Choose Pattern
-                    </span>
-                  </Text>
-                  <Image
-                    alt='Cyclist Cusotm Jersey'
-                    layout='fill'
-                    src='/icons/kein-muster.svg'
-                    width='100%'
-                    height={35}
-                    style={{
-                      maxWidth: '60px',
-                    }}
-                    objectFit='contain'
-                    quality={60}
-                  />
-                </div>
-
-                <div className='inline-flex items-center justify-between w-full'>
-                  <ColorPicker color={{ r: 241, g: 19, b: 19, a: 100 }} />
-                  <Text className='font-bold text-gray-600'>
-                    3rd Colour or{' '}
-                    <span className='underline cursor-pointer'>
-                      Choose Pattern
-                    </span>
-                  </Text>
-                  <Image
-                    alt='Cyclist Cusotm Jersey'
-                    layout='fill'
-                    src='/icons/kein-muster.svg'
-                    width='100%'
-                    height={35}
-                    style={{
-                      maxWidth: '60px',
-                    }}
-                    objectFit='contain'
-                    quality={60}
-                  />
-                </div>
-
-                <div className='inline-flex items-center justify-between w-full'>
-                  <ColorPicker color={{ r: 19, g: 241, b: 55, a: 100 }} />
-                  <Text className='font-bold text-gray-600'>
-                    4th Colour or{' '}
-                    <span className='underline cursor-pointer'>
-                      Choose Pattern
-                    </span>
-                  </Text>
-                  <Image
-                    alt='Cyclist Cusotm Jersey'
-                    src='/icons/kein-muster.svg'
-                    layout='fill'
-                    width='100%'
-                    height={35}
-                    style={{
-                      maxWidth: '60px',
-                    }}
-                    objectFit='contain'
-                    quality={60}
-                  />
-                </div>
-
-                <div className='inline-flex items-center justify-between w-full'>
-                  <ColorPicker color={{ r: 255, g: 160, b: 0, a: 100 }} />
-                  <Text className='font-bold text-gray-600'>
-                    Collar Colour or{' '}
-                    <span className='underline cursor-pointer'>
-                      Choose Pattern
-                    </span>
-                  </Text>
-                  <Image
-                    alt='Cyclist Cusotm Jersey'
-                    src='/icons/kein-muster.svg'
-                    layout='fill'
-                    width='100%'
-                    height={35}
-                    style={{
-                      maxWidth: '60px',
-                    }}
-                    objectFit='contain'
-                    quality={60}
-                  />
-                </div>
+                {colors.map((data, index) => (
+                  <div
+                    key={index}
+                    className='inline-flex items-center justify-between w-full'
+                  >
+                    <ColorPicker
+                      color={data.color}
+                      // setCurrentColor={(e: string) => {
+                      //   svgGroup._objects[index].set('fill', e)
+                      //   canvas.current?.renderAll()
+                      //   setColorChanged(true)
+                      // }}
+                    />
+                    <Text className='font-bold text-gray-600'>
+                      {data.id} or{' '}
+                      <span className='underline cursor-pointer'>
+                        Choose Pattern
+                      </span>
+                    </Text>
+                    <Image
+                      alt='Cyclist Cusotm Jersey'
+                      src='/icons/kein-muster.svg'
+                      width='100%'
+                      height={35}
+                      style={{
+                        maxWidth: '60px',
+                      }}
+                      objectFit='contain'
+                      layout='fill'
+                      quality={60}
+                    />
+                  </div>
+                ))}
               </div>
             </Dropdowns>
 

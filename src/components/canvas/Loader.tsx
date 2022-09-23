@@ -1,20 +1,20 @@
 import { useEffect } from 'react'
 import { Html, useProgress } from '@react-three/drei'
-import useStore from '@/helpers/store'
 import Image from '@/components/dom/Image'
+import useStore from '@/helpers/store'
 
 function Loader() {
-  const setIsLoading = useStore((state) => state.setIsLoading)
   const { progress } = useProgress()
+  const setProgress = useStore((state) => state.setProgress)
 
   useEffect(() => {
     if (progress === 100) {
-      setIsLoading(false)
+      setProgress(false)
     }
-  }, [progress, setIsLoading])
+  }, [progress, setProgress])
 
   return (
-    <Html center>
+    <Html as='div' transform={false} wrapperClass='loader'>
       <div className='relative w-full h-auto ml-auto'>
         <Image
           alt='Cyclists Logo'

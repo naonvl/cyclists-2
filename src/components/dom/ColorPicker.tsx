@@ -12,17 +12,16 @@ type ColorType = {
 
 interface SketchPickerProps {
   color: ColorType
+  setCurrentColor?: any
 }
 
-const ColorPicker: React.FC<SketchPickerProps> = ({ color }) => {
+const ColorPicker: React.FC<SketchPickerProps> = ({
+  color,
+  setCurrentColor,
+}) => {
   const [state, setState] = useState({
     displayColorPicker: false,
-    color: {
-      r: color.r,
-      g: color.g,
-      b: color.b,
-      a: color.a,
-    },
+    color: '',
   })
 
   const handleClick = () => {
@@ -40,9 +39,10 @@ const ColorPicker: React.FC<SketchPickerProps> = ({ color }) => {
   }
 
   const handleChange = (color: any) => {
+    setCurrentColor(color.hex)
     return setState({
       ...state,
-      color: color.rgb,
+      color: color.hex,
     })
   }
 
@@ -57,7 +57,7 @@ const ColorPicker: React.FC<SketchPickerProps> = ({ color }) => {
         <div
           className={colorClasses}
           style={{
-            background: `rgba(${state.color.r}, ${state.color.g}, ${state.color.b}, ${state.color.a})`,
+            background: `${state.color}`,
           }}
         />
       </div>

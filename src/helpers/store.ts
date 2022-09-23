@@ -7,6 +7,8 @@ import type { MutableRefObject } from 'react'
 interface State {
   texturePath: number
   setTexturePath: (index: number) => void
+  progress: boolean
+  setProgress: (param: boolean) => void
   isLoading: boolean
   setIsLoading: (param: boolean) => void
   dropdownOpen: {
@@ -14,6 +16,8 @@ interface State {
     stepTwo: boolean
     stepThree: boolean
   }
+  canvas: MutableRefObject<any>
+  setCanvas: (param: MutableRefObject<any>) => void
   zoom: number
   setZoom: (value: number) => void
   zoomIn: boolean
@@ -30,13 +34,41 @@ interface State {
   setIsObjectFront: () => void
   cameraChanged: boolean
   setCameraChange: (param: boolean) => void
+  svgGroup: Array<any>
+  setSvgGroup: (data: any) => void
+  colors: Array<any>
+  setColors: (data: any) => void
+  colorChanged: boolean
+  setColorChanged: (param: boolean) => void
   router: NextRouter
   dom: MutableRefObject<any>
 }
 
 const useStoreImpl = create<State>()((set) => ({
+  colorChanged: false,
+  setColorChanged: (param) => set(() => ({ colorChanged: param })),
+  canvas: null,
+  setCanvas: (param: MutableRefObject<any>) =>
+    set((state) => {
+      state.canvas = param
+      return undefined
+    }),
   texturePath: 1,
   setTexturePath: (index) => set(() => ({ texturePath: index + 1 })),
+  colors: [],
+  setColors: (data: any) =>
+    set((state) => {
+      state.colors.push(data)
+      return undefined
+    }),
+  svgGroup: [],
+  setSvgGroup: (data: any) =>
+    set((state) => {
+      state.svgGroup.push(data)
+      return undefined
+    }),
+  progress: true,
+  setProgress: (param: boolean) => set(() => ({ progress: param })),
   isLoading: true,
   setIsLoading: (param: boolean) => set((state) => ({ isLoading: param })),
   dropdownOpen: {
@@ -61,6 +93,7 @@ const useStoreImpl = create<State>()((set) => ({
     set((state) => ({ isObjectFront: !state.isObjectFront })),
   cameraChanged: false,
   setCameraChange: (param) => set(() => ({ cameraChanged: param })),
+
   router: null,
   dom: null,
 }))

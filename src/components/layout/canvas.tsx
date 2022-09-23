@@ -11,7 +11,6 @@ const LControl = () => {
     if (control.current) {
       const domElement = dom.current
       const originalTouchAction = domElement.style['touch-action']
-      console.log(originalTouchAction)
       domElement.style['touch-action'] = 'auto'
 
       return () => {
