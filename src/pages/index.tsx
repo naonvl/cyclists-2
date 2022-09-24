@@ -278,7 +278,10 @@ const Page = (props) => {
           </div>
           <div className='mt-5 mb-3'>
             <div className='flex overflow-hidden md:justify-between'>
-              <div className='inline-flex flex-col items-center'>
+              <div
+                className='inline-flex flex-col items-center cursor-pointer'
+                onClick={() => setStep(1)}
+              >
                 <Text
                   className={cn(
                     'text-2xl lg:text-3xl font-bold w-full mr-auto',
@@ -297,7 +300,10 @@ const Page = (props) => {
                   choose your style
                 </Text>
               </div>
-              <div className='inline-flex flex-col items-center'>
+              <div
+                className='inline-flex flex-col items-center cursor-pointer'
+                onClick={() => setStep(2)}
+              >
                 <Text
                   className={cn(
                     'text-2xl lg:text-3xl font-bold w-full mr-auto',
@@ -316,7 +322,10 @@ const Page = (props) => {
                   choose your colours
                 </Text>
               </div>
-              <div className='inline-flex flex-col items-center'>
+              <div
+                className='inline-flex flex-col items-center cursor-pointer'
+                onClick={() => setStep(3)}
+              >
                 <Text
                   className={cn(
                     'text-2xl lg:text-3xl font-bold w-full mr-auto',

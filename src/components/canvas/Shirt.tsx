@@ -145,109 +145,105 @@ const ShirtComponent = ({ props, canvasRef }: ShirtProps) => {
       />
       <ambientLight intensity={0.4} />
       <Suspense fallback={<Loader />}>
-        {isLoading ? (
-          <Loader />
-        ) : (
-          <group
-            ref={groupRef}
-            dispose={null}
-            onPointerOver={() => setHovered(true)}
-            onPointerOut={() => setHovered(false)}
-            onPointerDown={() => setClicked(true)}
-            onPointerUp={() => setClicked(false)}
-            {...props}
+        <group
+          ref={groupRef}
+          dispose={null}
+          onPointerOver={() => setHovered(true)}
+          onPointerOut={() => setHovered(false)}
+          onPointerDown={() => setClicked(true)}
+          onPointerUp={() => setClicked(false)}
+          {...props}
+        >
+          <mesh
+            geometry={nodes.M740158_mesh_band.geometry}
+            material={nodes.M740158_mesh_band.material}
+            scale={100}
           >
-            <mesh
-              geometry={nodes.M740158_mesh_band.geometry}
-              material={nodes.M740158_mesh_band.material}
-              scale={100}
+            <meshStandardMaterial
+              attach='material'
+              normalMap={normalMap}
+              normalMap-flipY={false}
+              map={textureRef.current}
             >
-              <meshStandardMaterial
-                attach='material'
-                normalMap={normalMap}
-                normalMap-flipY={false}
-                map={textureRef.current}
-              >
-                <texture attach='map' image={canvasRef} />
-              </meshStandardMaterial>
-            </mesh>
-            <mesh
-              geometry={nodes.M740158_mesh_in.geometry}
-              material={nodes.M740158_mesh_in.material}
-              scale={100}
+              <texture attach='map' image={canvasRef} />
+            </meshStandardMaterial>
+          </mesh>
+          <mesh
+            geometry={nodes.M740158_mesh_in.geometry}
+            material={nodes.M740158_mesh_in.material}
+            scale={100}
+          >
+            <meshStandardMaterial
+              attach='material'
+              roughness={1}
+              emissive={1}
+              bumpMap={bump}
+              bumpScale={0.03}
+              // normalMap={normalMap}
+              // normalMap-flipY={false}
+              // normalScale={new THREE.Vector2( 0.01,0.01 )}
+              map={textureRef.current}
+              color='#ccc'
+            />
+          </mesh>
+          <mesh
+            geometry={nodes.M740158_mesh_out.geometry}
+            material={nodes.M740158_mesh_out.material}
+            scale={100}
+          >
+            <meshStandardMaterial
+              attach='material'
+              // displacementScale={0.001}
+              bumpMap={bump}
+              roughness={0.7}
+              emissive={1}
+              bumpScale={0.03}
+              // normalMap={normalMap}
+              // normalMap-flipY={false}
+              // normalScale={new THREE.Vector2( 0.01,0.01 )}
+              map={textureRef.current}
+              aoMap={aoMapout}
+              aoMapIntensity={0.5}
             >
-              <meshStandardMaterial
-                attach='material'
-                roughness={1}
-                emissive={1}
-                bumpMap={bump}
-                bumpScale={0.03}
-                // normalMap={normalMap}
-                // normalMap-flipY={false}
-                // normalScale={new THREE.Vector2( 0.01,0.01 )}
-                map={textureRef.current}
-                color='#ccc'
-              />
-            </mesh>
-            <mesh
-              geometry={nodes.M740158_mesh_out.geometry}
-              material={nodes.M740158_mesh_out.material}
-              scale={100}
+              <texture attach='map' image={canvasRef} ref={textureRef} />
+            </meshStandardMaterial>
+          </mesh>
+          <mesh
+            geometry={nodes.M740158_mesh_zipp.geometry}
+            material={nodes.M740158_mesh_zipp.material}
+            // position={[0, -1.05, 4.19]}
+            // rotation={[-0.24, 0, 0]}
+            scale={100}
+          >
+            <meshStandardMaterial
+              attach='material'
+              normalMap={normalMap}
+              normalMap-flipY={false}
+              map={textureRef.current}
+              aoMap={aoMapzipp}
+              aoMapIntensity={0.7}
             >
-              <meshStandardMaterial
-                attach='material'
-                // displacementScale={0.001}
-                bumpMap={bump}
-                roughness={0.7}
-                emissive={1}
-                bumpScale={0.03}
-                // normalMap={normalMap}
-                // normalMap-flipY={false}
-                // normalScale={new THREE.Vector2( 0.01,0.01 )}
-                map={textureRef.current}
-                aoMap={aoMapout}
-                aoMapIntensity={0.5}
-              >
-                <texture attach='map' image={canvasRef} ref={textureRef} />
-              </meshStandardMaterial>
-            </mesh>
-            <mesh
-              geometry={nodes.M740158_mesh_zipp.geometry}
-              material={nodes.M740158_mesh_zipp.material}
-              // position={[0, -1.05, 4.19]}
-              // rotation={[-0.24, 0, 0]}
-              scale={100}
+              <texture attach='map' image={canvasRef} />
+            </meshStandardMaterial>
+          </mesh>
+          <mesh
+            geometry={nodes.M740158_mesh_zipper.geometry}
+            material={nodes.M740158_mesh_zipper.material}
+            scale={100}
+          >
+            <meshStandardMaterial
+              attach='material'
+              normalMap={normalMap}
+              normalMap-flipY={false}
+              map={textureRef.current}
+              aoMap={aoMapzipp}
+              aoMapIntensity={0.7}
             >
-              <meshStandardMaterial
-                attach='material'
-                normalMap={normalMap}
-                normalMap-flipY={false}
-                map={textureRef.current}
-                aoMap={aoMapzipp}
-                aoMapIntensity={0.7}
-              >
-                <texture attach='map' image={canvasRef} />
-              </meshStandardMaterial>
-            </mesh>
-            <mesh
-              geometry={nodes.M740158_mesh_zipper.geometry}
-              material={nodes.M740158_mesh_zipper.material}
-              scale={100}
-            >
-              <meshStandardMaterial
-                attach='material'
-                normalMap={normalMap}
-                normalMap-flipY={false}
-                map={textureRef.current}
-                aoMap={aoMapzipp}
-                aoMapIntensity={0.7}
-              >
-                <texture attach='map' image={canvasRef} />
-              </meshStandardMaterial>
-            </mesh>
-            {/* <PerspectiveCamera ref={cam} position={[0, 0, 0]} /> */}
-          </group>
-        )}
+              <texture attach='map' image={canvasRef} />
+            </meshStandardMaterial>
+          </mesh>
+          {/* <PerspectiveCamera ref={cam} position={[0, 0, 0]} /> */}
+        </group>
         <Preload all />
         <BakeShadows />
         <Environment preset='city' />

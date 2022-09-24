@@ -8,7 +8,7 @@ module.exports = {
   theme: {
     fontFamily: {
       sans: [
-        'Roboto',
+        'Chivo',
         'ui-sans-serif',
         'system-ui',
         '-apple-system',
