@@ -8,6 +8,7 @@ import {
   Suspense,
   useCallback,
 } from 'react'
+import { fabric } from 'fabric'
 import ArrowDownTrayIcon from '@heroicons/react/24/outline/ArrowDownTrayIcon'
 import Loader from '@/components/canvas/Loader'
 
@@ -23,6 +24,8 @@ import InputSelect from '@/components/dom/InputSelect'
 import { jerseyStyles, options } from '@/constants'
 import InputNumber from '@/components/dom/InputNumber'
 import DropdownControls from '@/components/dom/DropdownControls'
+import loadSvg from '@/helpers/loadSvg'
+import initCanvas from '@/helpers/initCanvas'
 
 // Dynamic import is used to prevent a payload when the website start that will include threejs r3f etc..
 // WARNING ! errors might get obfuscated by using dynamic import.
@@ -37,6 +40,8 @@ const LCanvas = dynamic(() => import('@/components/layout/canvas'), {
 
 // dom components goes here
 const Page = (props) => {
+  const canvasRef = useRef<fabric.Canvas | null>(null)
+
   const changeZoomIn = useStore((state) => state.changeZoomIn)
   const changeZoomOut = useStore((state) => state.changeZoomOut)
   const texture = useStore((state) => state.texture)
@@ -52,6 +57,8 @@ const Page = (props) => {
   const setColorChanged = useStore((state) => state.setColorChanged)
   const canvas = useStore((state) => state.canvas)
   const colors = useStore((state) => state.colors)
+  const setColors = useStore((state) => state.setColors)
+  const setSvgGroup = useStore((state) => state.setSvgGroup)
 
   const inputNumberRef = useRef<HTMLInputElement>(null)
 
@@ -68,6 +75,28 @@ const Page = (props) => {
     fontSize: 16,
     fontFamily: 'Roboto',
   })
+
+  useEffect(() => {
+    loadSvg({
+      texture: texture,
+      canvas: canvasRef,
+      setIsLoading,
+      setSvgGroup,
+      setColors,
+      isLoading,
+    })
+
+    // canvasRef.current = initCanvas({
+    //   width: texture.width,
+    //   height: texture.height,
+    // })
+
+    // cleanup
+    return () => {
+      canvasRef.current?.dispose()
+      canvasRef.current = null
+    }
+  }, [canvasRef, isLoading, setColors, setIsLoading, setSvgGroup, texture])
 
   useEffect(() => {
     switch (step) {
@@ -97,7 +126,7 @@ const Page = (props) => {
           stepThree: false,
         })
     }
-  }, [isLoading, setIsLoading, step])
+  }, [step])
 
   const handleFlipCamera = () => {
     setIsObjectFront()
@@ -105,12 +134,12 @@ const Page = (props) => {
   }
 
   const handleChangeTexture = (index: number) => {
+    setIsLoading(true)
     setTexture({
       path: index + 1,
       width: jerseyStyles[index].width,
       height: jerseyStyles[index].height,
     })
-    setIsLoading(true)
   }
 
   const decrementAction = () => {
@@ -564,7 +593,7 @@ const Page = (props) => {
                 height: '543px',
               }}
             >
-              {Page.r3f(props)}
+              {Page.r3f({ canvasRef })}
             </LCanvas>
           )}
           <div className='items-center justify-center hidden w-full my-2 ml-auto lg:flex gap-3'>
@@ -607,9 +636,9 @@ const Page = (props) => {
 
 // canvas components goes here
 // It will receive same props as Page component (from getStaticProps, etc.)
-Page.r3f = (props) => (
+Page.r3f = ({ canvasRef }) => (
   <>
-    <Shirt />
+    <Shirt canvasRef={canvasRef} />
   </>
 )
 

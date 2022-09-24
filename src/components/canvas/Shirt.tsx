@@ -1,21 +1,13 @@
 import * as THREE from 'three'
 import { useFrame, useLoader, useThree } from '@react-three/fiber'
 import { TextureLoader } from 'three/src/loaders/TextureLoader'
-import { DDSLoader } from 'three/examples/jsm/loaders/DDSLoader'
 import { GLTF, OrbitControls as OrbitControlsImpl } from 'three-stdlib'
 import { fabric } from 'fabric'
 import loadSvg from '@/helpers/loadSvg'
 import initCanvas from '@/helpers/initCanvas'
 import Loader from '@/components/canvas/Loader'
 import useStore from '@/helpers/store'
-import {
-  useState,
-  useRef,
-  useEffect,
-  Dispatch,
-  SetStateAction,
-  Suspense,
-} from 'react'
+import { useState, useRef, useEffect, Suspense, MutableRefObject } from 'react'
 import {
   useGLTF,
   Environment,
@@ -38,17 +30,13 @@ type GLTFResult = GLTF & {
 
 interface ShirtProps {
   props?: JSX.IntrinsicElements['group']
+  canvasRef: MutableRefObject<fabric.Canvas | null>
 }
 
-const width = 1200
-const height = 1200
-
-const ShirtComponent = ({ props }: ShirtProps) => {
+const ShirtComponent = ({ props, canvasRef }: ShirtProps) => {
   const { gl } = useThree()
-  const { progress } = useProgress()
   const groupRef = useRef<THREE.Group>(null)
   const controlsRef = useRef<OrbitControlsImpl>(null)
-  const canvasRef = useRef<fabric.Canvas | null>(null)
   const textureRef = useRef<THREE.Texture | null>(null)
 
   // Loading state
@@ -79,6 +67,8 @@ const ShirtComponent = ({ props }: ShirtProps) => {
   const setColors = useStore((state) => state.setColors)
   const setCanvas = useStore((state) => state.setCanvas)
   const canvas = useStore((state) => state.canvas)
+  const progress = useStore((state) => state.progress)
+  const setProgress = useStore((state) => state.setProgress)
 
   // Textures
   const [normalMap] = useLoader(TextureLoader, ['/textures/Jersey_NORMAL.png'])
@@ -91,48 +81,17 @@ const ShirtComponent = ({ props }: ShirtProps) => {
 
   const { nodes } = useGLTF('/model/S-cycling-jersey.drc.glb') as GLTFResult
 
-  useEffect(() => {
-    canvasRef.current = initCanvas({
-      width: texture.width,
-      height: texture.height,
-    })
-
-    // if (canvasRef.current && canvas === null) {
-    //   setCanvas(canvasRef)
-    // }
-
-    loadSvg({
-      texture: texture,
-      canvas: canvasRef,
-      setIsLoading,
-      setSvgGroup,
-      setColors,
-    })
-
-    // start()
-    // if (cam.current) {
-    //   cam.current.lookAt(1, 0, 0)
-    // }
-
-    // cleanup
-    return () => {
-      canvasRef.current.dispose()
-      canvasRef.current = null
-    }
-  }, [
-    canvas,
-    colors,
-    setCanvas,
-    setColors,
-    setIsLoading,
-    setSvgGroup,
-    setZoom,
-    texture,
-  ])
-
   // Subscribe this component to the render-loop, rotate the mesh every frame
   useFrame((state, delta) => {
     // setZoom(Math.floor(state.camera.position.z))
+    if (canvasRef.current) {
+      textureRef.current = new THREE.Texture(canvasRef.current.getElement())
+      textureRef.current.anisotropy = gl.capabilities.getMaxAnisotropy()
+      textureRef.current.needsUpdate = true
+      textureRef.current.flipY = false
+      textureRef.current.needsUpdate = true
+      canvasRef.current.renderAll()
+    }
 
     if (colorChanged) {
       state.camera.position.z = state.camera.position.z + 0.001
@@ -173,15 +132,6 @@ const ShirtComponent = ({ props }: ShirtProps) => {
       changeRotateLeft(false)
     }
 
-    if (canvasRef.current) {
-      textureRef.current = new THREE.Texture(canvasRef.current.getElement())
-      textureRef.current.anisotropy = gl.capabilities.getMaxAnisotropy()
-      textureRef.current.needsUpdate = true
-      textureRef.current.flipY = false
-
-      textureRef.current.needsUpdate = true
-    }
-
     state.gl.domElement.style.cursor = hovered ? 'grab' : 'auto'
     state.gl.domElement.style.cursor = clicked ? 'grabbing' : 'grab'
   })
@@ -203,8 +153,8 @@ const ShirtComponent = ({ props }: ShirtProps) => {
         castShadow
       />
       <ambientLight intensity={0.4} />
-      <Suspense fallback={null}>
-        {isLoading && progress === 100 ? (
+      <Suspense fallback={<Loader />}>
+        {isLoading ? (
           <Loader />
         ) : (
           <group
