@@ -28,11 +28,11 @@ const Dropdowns: React.FC<DropdownsProps> = ({
   const buttonRef = useRef(null)
   const rootClasses = cn('relative inline-block text-left', rootClass)
   const menuClasses = cn(
-    'right-0 z-10 bg-white origin-top-right rounded-md focus:outline-none',
+    'right-0 bg-white origin-top-right rounded-md focus:outline-none',
     menuClass
   )
   const buttonClasses = cn(
-    'inline-flex justify-between w-full px-4 py-2 text-sm font-medium text-white uppercase bg-black border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:ring-offset-gray-100',
+    'z-10 inline-flex justify-between w-full px-4 py-2 text-sm font-medium text-white uppercase bg-black border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:ring-offset-gray-100',
     buttonClass
   )
   const iconClasses = cn('w-5 h-5 ml-2 -mr-1')

@@ -3,16 +3,9 @@ import { useState } from 'react'
 import CloseIcon from '@heroicons/react/24/outline/XMarkIcon'
 import { SketchPicker as ReactSketchPicker } from 'react-color'
 
-type ColorType = {
-  r: number
-  g: number
-  b: number
-  a: number
-}
-
 interface SketchPickerProps {
-  color: ColorType
-  setCurrentColor?: any
+  color: string
+  setCurrentColor?: (param: any) => void
 }
 
 const ColorPicker: React.FC<SketchPickerProps> = ({
@@ -57,17 +50,17 @@ const ColorPicker: React.FC<SketchPickerProps> = ({
         <div
           className={colorClasses}
           style={{
-            background: `${state.color}`,
+            background: `${color}`,
           }}
         />
       </div>
       {state.displayColorPicker ? (
-        <div className='absolute z-[2]'>
+        <div className='absolute z-50'>
           <CloseIcon
             className='absolute w-5 h-5 text-gray-700 bg-white border border-b-0 border-gray-300 cursor-pointer -right-[1px] -top-[1.15rem]'
             onClick={handleClose}
           />
-          <ReactSketchPicker color={state.color} onChange={handleChange} />
+          <ReactSketchPicker color={color} onChange={handleChange} />
         </div>
       ) : null}
     </>

@@ -36,7 +36,7 @@ interface State {
   setCameraChange: (param: boolean) => void
   svgGroup: Array<any>
   setSvgGroup: (data: any) => void
-  colors: Array<any>
+  colors: Array<{ id: any; color: any }>
   setColors: (data: any) => void
   colorChanged: boolean
   setColorChanged: (param: boolean) => void
@@ -69,17 +69,9 @@ const useStoreImpl = create<State>()((set) => ({
   texturePath: 1,
   setTexturePath: (index) => set(() => ({ texturePath: index + 1 })),
   colors: [],
-  setColors: (data: any) =>
-    set((state) => {
-      state.colors.push(data)
-      return undefined
-    }),
+  setColors: (data: any) => set(() => ({ colors: data })),
   svgGroup: [],
-  setSvgGroup: (data: any) =>
-    set((state) => {
-      state.svgGroup.push(data)
-      return undefined
-    }),
+  setSvgGroup: (data: any) => set(() => ({ svgGroup: data })),
   progress: true,
   setProgress: (param: boolean) => set(() => ({ progress: param })),
   isLoading: true,

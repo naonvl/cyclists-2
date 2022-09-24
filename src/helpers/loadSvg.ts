@@ -20,7 +20,6 @@ const loadSvg = ({
   setIsLoading,
   setSvgGroup,
   setColors,
-  isLoading,
 }: LoadSVGProps) => {
   canvas.current = new fabric.Canvas('canvas', {
     preserveObjectStacking: true,
@@ -28,6 +27,8 @@ const loadSvg = ({
     height: texture.height,
     selection: false,
   })
+
+  let colors: Array<{ id: any; fill: any }> = []
 
   return fabric.loadSVGFromURL(
     `/textures/Jersey_COLOR${texture.path}.svg`,
@@ -41,6 +42,17 @@ const loadSvg = ({
 
       svgData.top = 0
       svgData.left = 0
+      setSvgGroup(svgData)
+
+      for (let i = 0; i < svgData._objects.length; i++) {
+        colors[i] = {
+          id: svgData._objects[i].id,
+          fill: svgData._objects[i].fill,
+        }
+      }
+
+      setColors(colors)
+
       if (canvas.current && canvas.current._objects[0] == undefined) {
         canvas.current.remove(canvas.current._objects[0])
       }

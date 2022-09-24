@@ -1,14 +1,7 @@
 import cn from 'clsx'
 import { GetStaticProps } from 'next'
 import dynamic from 'next/dynamic'
-import {
-  useState,
-  useRef,
-  useEffect,
-  MouseEvent,
-  Suspense,
-  useCallback,
-} from 'react'
+import { useState, useRef, useEffect, MouseEvent } from 'react'
 import { fabric } from 'fabric'
 import { useDetectGPU } from '@react-three/drei'
 import ArrowDownTrayIcon from '@heroicons/react/24/outline/ArrowDownTrayIcon'
@@ -240,16 +233,15 @@ const Page = (props) => {
                 <span>save</span>
               </button>
             </div>
-            {Page?.r3f && GPUTier.isMobile && (
+            {Page?.r3f ? (
               <LCanvas
                 style={{
-                  width: '368px',
-                  height: '450px',
+                  height: '543px',
                 }}
               >
-                {Page.r3f(props)}
+                {Page.r3f({ canvasRef })}
               </LCanvas>
-            )}
+            ) : null}
           </div>
           <div className='flex items-center justify-center w-full my-2 ml-auto lg:hidden gap-3'>
             <div className='relative inline-flex'>
@@ -277,7 +269,7 @@ const Page = (props) => {
             </div>
           </div>
           <div className='mt-5 mb-3'>
-            <div className='flex overflow-hidden md:justify-between'>
+            <div className='flex justify-between overflow-hidden md:justify-between'>
               <div
                 className='inline-flex flex-col items-center cursor-pointer'
                 onClick={() => setStep(1)}
@@ -356,11 +348,11 @@ const Page = (props) => {
               menuClass='w-full'
               label='stepOne'
             >
-              <div className='flex overflow-hidden'>
+              <div className='flex flex-row overflow-hidden'>
                 {jerseyStyles.map(({ text, image }, index) => (
                   <div
                     className={cn(
-                      'items-center justify-center w-full cursor-pointer hover:border hover:border-pink-600 pt-3 my-2',
+                      'flex flex-col items-center justify-center w-full cursor-pointer hover:border hover:border-pink-600 pt-3 my-2',
                       {
                         ['border border-pink-600']: texture.path === index + 1,
                       }
@@ -408,12 +400,12 @@ const Page = (props) => {
                     className='inline-flex items-center justify-between w-full'
                   >
                     <ColorPicker
-                      color={data.color}
-                      // setCurrentColor={(e: string) => {
-                      //   svgGroup._objects[index].set('fill', e)
-                      //   canvas.current?.renderAll()
-                      //   setColorChanged(true)
-                      // }}
+                      color={data.fill}
+                      setCurrentColor={(e: string) => {
+                        svgGroup._objects[index].set('fill', e)
+                        canvasRef.current?.renderAll()
+                        setColorChanged(true)
+                      }}
                     />
                     <Text className='font-bold text-gray-600'>
                       {data.id} or{' '}
