@@ -40,11 +40,24 @@ interface State {
   setColors: (data: any) => void
   colorChanged: boolean
   setColorChanged: (param: boolean) => void
+  texture: {
+    path: number
+    width: number
+    height: number
+  }
+  setTexture: (data: { path: number; width: number; height: number }) => void
   router: NextRouter
   dom: MutableRefObject<any>
 }
 
 const useStoreImpl = create<State>()((set) => ({
+  texture: {
+    path: 1,
+    width: 2048,
+    height: 2048,
+  },
+  setTexture: (data: { path: number; width: number; height: number }) =>
+    set(() => ({ texture: data })),
   colorChanged: false,
   setColorChanged: (param) => set(() => ({ colorChanged: param })),
   canvas: null,

@@ -39,8 +39,8 @@ const LCanvas = dynamic(() => import('@/components/layout/canvas'), {
 const Page = (props) => {
   const changeZoomIn = useStore((state) => state.changeZoomIn)
   const changeZoomOut = useStore((state) => state.changeZoomOut)
-  const texturePath = useStore((state) => state.texturePath)
-  const setTexturePath = useStore((state) => state.setTexturePath)
+  const texture = useStore((state) => state.texture)
+  const setTexture = useStore((state) => state.setTexture)
   const changeRotateRight = useStore((state) => state.changeRotateRight)
   const changeRotateLeft = useStore((state) => state.changeRotateLeft)
   const setIsObjectFront = useStore((state) => state.setIsObjectFront)
@@ -105,7 +105,11 @@ const Page = (props) => {
   }
 
   const handleChangeTexture = (index: number) => {
-    setTexturePath(index)
+    setTexture({
+      path: index + 1,
+      width: jerseyStyles[index].width,
+      height: jerseyStyles[index].height,
+    })
     setIsLoading(true)
   }
 
@@ -307,7 +311,12 @@ const Page = (props) => {
               <div className='flex overflow-hidden'>
                 {jerseyStyles.map(({ text, image }, index) => (
                   <div
-                    className='items-center justify-center w-full cursor-pointer'
+                    className={cn(
+                      'items-center justify-center w-full cursor-pointer hover:border hover:border-pink-600 pt-3 my-2',
+                      {
+                        ['border border-pink-600']: texture.path === index + 1,
+                      }
+                    )}
                     onClick={() => handleChangeTexture(index)}
                     key={index}
                   >
@@ -326,10 +335,7 @@ const Page = (props) => {
                     <button
                       type='button'
                       className={cn(
-                        'w-full h-[3.5rem] px-3 text-sm font-bold text-center py-2 uppercase text-black my-2 hover:border hover:border-pink-600',
-                        {
-                          ['border border-pink-600']: texturePath === index + 1,
-                        }
+                        'w-full h-[3.5rem] px-3 text-sm font-bold text-center py-2 uppercase text-black'
                       )}
                     >
                       {text}

@@ -55,7 +55,7 @@ const ShirtComponent = ({ props }: ShirtProps) => {
   const isLoading = useStore((state) => state.isLoading)
   const setIsLoading = useStore((state) => state.setIsLoading)
   // Texture state
-  const texturePath = useStore((state) => state.texturePath)
+  const texture = useStore((state) => state.texture)
   // Zoom state
   const zoomIn = useStore((state) => state.zoomIn)
   const changeZoomIn = useStore((state) => state.changeZoomIn)
@@ -93,8 +93,8 @@ const ShirtComponent = ({ props }: ShirtProps) => {
 
   useEffect(() => {
     canvasRef.current = initCanvas({
-      width,
-      height,
+      width: texture.width,
+      height: texture.height,
     })
 
     // if (canvasRef.current && canvas === null) {
@@ -102,10 +102,8 @@ const ShirtComponent = ({ props }: ShirtProps) => {
     // }
 
     loadSvg({
-      path: texturePath,
+      texture: texture,
       canvas: canvasRef,
-      width,
-      height,
       setIsLoading,
       setSvgGroup,
       setColors,
@@ -129,7 +127,7 @@ const ShirtComponent = ({ props }: ShirtProps) => {
     setIsLoading,
     setSvgGroup,
     setZoom,
-    texturePath,
+    texture,
   ])
 
   // Subscribe this component to the render-loop, rotate the mesh every frame
