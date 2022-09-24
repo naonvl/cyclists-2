@@ -3,18 +3,18 @@ import { useFrame, useLoader, useThree } from '@react-three/fiber'
 import { TextureLoader } from 'three/src/loaders/TextureLoader'
 import { GLTF, OrbitControls as OrbitControlsImpl } from 'three-stdlib'
 import { fabric } from 'fabric'
-import loadSvg from '@/helpers/loadSvg'
-import initCanvas from '@/helpers/initCanvas'
 import Loader from '@/components/canvas/Loader'
 import useStore from '@/helpers/store'
-import { useState, useRef, useEffect, Suspense, MutableRefObject } from 'react'
+import { useState, useRef, Suspense, MutableRefObject } from 'react'
 import {
   useGLTF,
   Environment,
   OrbitControls,
   AdaptiveDpr,
   Stats,
-  useProgress,
+  Preload,
+  BakeShadows,
+  AdaptiveEvents,
 } from '@react-three/drei'
 
 type GLTFResult = GLTF & {
@@ -34,16 +34,13 @@ interface ShirtProps {
 }
 
 const ShirtComponent = ({ props, canvasRef }: ShirtProps) => {
-  const { gl } = useThree()
+  const { camera, gl } = useThree()
   const groupRef = useRef<THREE.Group>(null)
   const controlsRef = useRef<OrbitControlsImpl>(null)
   const textureRef = useRef<THREE.Texture | null>(null)
 
   // Loading state
   const isLoading = useStore((state) => state.isLoading)
-  const setIsLoading = useStore((state) => state.setIsLoading)
-  // Texture state
-  const texture = useStore((state) => state.texture)
   // Zoom state
   const zoomIn = useStore((state) => state.zoomIn)
   const changeZoomIn = useStore((state) => state.changeZoomIn)
@@ -62,13 +59,6 @@ const ShirtComponent = ({ props, canvasRef }: ShirtProps) => {
 
   const colorChanged = useStore((state) => state.colorChanged)
   const setColorChanged = useStore((state) => state.setColorChanged)
-  const setSvgGroup = useStore((state) => state.setSvgGroup)
-  const colors = useStore((state) => state.colors)
-  const setColors = useStore((state) => state.setColors)
-  const setCanvas = useStore((state) => state.setCanvas)
-  const canvas = useStore((state) => state.canvas)
-  const progress = useStore((state) => state.progress)
-  const setProgress = useStore((state) => state.setProgress)
 
   // Textures
   const [normalMap] = useLoader(TextureLoader, ['/textures/Jersey_NORMAL.png'])
@@ -83,6 +73,7 @@ const ShirtComponent = ({ props, canvasRef }: ShirtProps) => {
 
   // Subscribe this component to the render-loop, rotate the mesh every frame
   useFrame((state, delta) => {
+    controlsRef.current.update()
     // setZoom(Math.floor(state.camera.position.z))
     if (canvasRef.current) {
       textureRef.current = new THREE.Texture(canvasRef.current.getElement())
@@ -257,10 +248,13 @@ const ShirtComponent = ({ props, canvasRef }: ShirtProps) => {
             {/* <PerspectiveCamera ref={cam} position={[0, 0, 0]} /> */}
           </group>
         )}
+        <Preload all />
+        <BakeShadows />
         <Environment preset='city' />
       </Suspense>
       <OrbitControls
         ref={controlsRef}
+        args={[camera, gl.domElement]}
         minPolarAngle={Math.PI / 4}
         maxPolarAngle={Math.PI / 1.4}
         minDistance={20}
@@ -271,7 +265,8 @@ const ShirtComponent = ({ props, canvasRef }: ShirtProps) => {
         enablePan={false}
         enableDamping={false}
       />
-      <AdaptiveDpr />
+      <AdaptiveDpr pixelated />
+      <AdaptiveEvents />
       <Stats showPanel={0} />
     </>
   )

@@ -41,12 +41,11 @@ const loadSvg = ({
 
       svgData.top = 0
       svgData.left = 0
+      if (canvas.current && canvas.current._objects[0] == undefined) {
+        canvas.current.remove(canvas.current._objects[0])
+      }
 
-      if (canvas.current) {
-        if (canvas.current._objects[0] !== undefined) {
-          canvas.current.remove(canvas.current._objects[0])
-        }
-
+      if (canvas.current && svgData._objects.length > 0) {
         canvas.current.add(svgData)
         canvas.current.sendToBack(svgData)
         canvas.current.renderAll()

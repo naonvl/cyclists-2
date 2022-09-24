@@ -1,3 +1,4 @@
+import cn from 'clsx'
 import { GetStaticProps } from 'next'
 import dynamic from 'next/dynamic'
 import {
@@ -9,12 +10,13 @@ import {
   useCallback,
 } from 'react'
 import { fabric } from 'fabric'
+import { useDetectGPU } from '@react-three/drei'
 import ArrowDownTrayIcon from '@heroicons/react/24/outline/ArrowDownTrayIcon'
-import Loader from '@/components/canvas/Loader'
 
 import useStore from '@/helpers/store'
 import Text from '@/components/dom/Text'
-import cn from 'clsx'
+
+import Loader from '@/components/canvas/Loader'
 
 import Navbar from '@/components/dom/Navbar'
 import Dropdowns from '@/components/dom/Dropdowns'
@@ -25,7 +27,6 @@ import { jerseyStyles, options } from '@/constants'
 import InputNumber from '@/components/dom/InputNumber'
 import DropdownControls from '@/components/dom/DropdownControls'
 import loadSvg from '@/helpers/loadSvg'
-import initCanvas from '@/helpers/initCanvas'
 
 // Dynamic import is used to prevent a payload when the website start that will include threejs r3f etc..
 // WARNING ! errors might get obfuscated by using dynamic import.
@@ -41,6 +42,7 @@ const LCanvas = dynamic(() => import('@/components/layout/canvas'), {
 // dom components goes here
 const Page = (props) => {
   const canvasRef = useRef<fabric.Canvas | null>(null)
+  const GPUTier = useDetectGPU()
 
   const changeZoomIn = useStore((state) => state.changeZoomIn)
   const changeZoomOut = useStore((state) => state.changeZoomOut)
@@ -96,7 +98,15 @@ const Page = (props) => {
       canvasRef.current?.dispose()
       canvasRef.current = null
     }
-  }, [canvasRef, isLoading, setColors, setIsLoading, setSvgGroup, texture])
+  }, [
+    GPUTier,
+    canvasRef,
+    isLoading,
+    setColors,
+    setIsLoading,
+    setSvgGroup,
+    texture,
+  ])
 
   useEffect(() => {
     switch (step) {
@@ -230,7 +240,7 @@ const Page = (props) => {
                 <span>save</span>
               </button>
             </div>
-            {Page?.r3f && (
+            {Page?.r3f && GPUTier.isMobile && (
               <LCanvas
                 style={{
                   width: '368px',
@@ -586,7 +596,7 @@ const Page = (props) => {
             </button>
           </div>
           {/* Model */}
-          {Page?.r3f && (
+          {Page?.r3f && !GPUTier.isMobile ? (
             <LCanvas
               style={{
                 width: '596px',
@@ -595,7 +605,7 @@ const Page = (props) => {
             >
               {Page.r3f({ canvasRef })}
             </LCanvas>
-          )}
+          ) : null}
           <div className='items-center justify-center hidden w-full my-2 ml-auto lg:flex gap-3'>
             <div className='relative inline-flex'>
               <Image
