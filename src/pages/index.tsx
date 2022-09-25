@@ -426,8 +426,16 @@ const Page = (props) => {
               menuClass='w-full'
               label='stepThree'
             >
-              <div className='flex flex-col overflow-hidden'>
-                <div className='inline-flex flex-col mb-2'>
+              <div className='flex flex-col w-full overflow-hidden'>
+                <div className='mx-auto'>
+                  <button
+                    type='button'
+                    className="px-4 py-3 text-sm text-white uppercase bg-pink-500 before:content-[' '] before:w-[30%] before:h-[3px] before:bg-pink-300 before:absolute before:left-6 before:top-7 after:content-[' after:w-[30%] after:h-[3px] after:bg-pink-300 after:absolute after:right-6 after:top-7 hover:bg-pink-600"
+                  >
+                    create text
+                  </button>
+                </div>
+                {/* <div className='inline-flex flex-col mb-2'>
                   <label
                     htmlFor='addName'
                     className='mb-1 font-bold text-gray-700'
@@ -473,7 +481,7 @@ const Page = (props) => {
                     id='fontFamily'
                     options={options}
                   />
-                </div>
+                </div> */}
               </div>
             </Dropdowns>
           </div>
