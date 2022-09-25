@@ -186,9 +186,6 @@ const ShirtComponent = ({ props, canvasRef }: ShirtProps) => {
               emissive={1}
               bumpMap={bump}
               bumpScale={0.03}
-              // normalMap={normalMap}
-              // normalMap-flipY={false}
-              // normalScale={new THREE.Vector2( 0.01,0.01 )}
               map={textureRef.current}
               color='#ccc'
             />
@@ -200,14 +197,10 @@ const ShirtComponent = ({ props, canvasRef }: ShirtProps) => {
           >
             <meshStandardMaterial
               attach='material'
-              // displacementScale={0.001}
               bumpMap={bump}
               roughness={0.7}
               emissive={1}
               bumpScale={0.03}
-              // normalMap={normalMap}
-              // normalMap-flipY={false}
-              // normalScale={new THREE.Vector2( 0.01,0.01 )}
               map={textureRef.current}
               aoMap={aoMapout}
               aoMapIntensity={0.5}
@@ -218,8 +211,6 @@ const ShirtComponent = ({ props, canvasRef }: ShirtProps) => {
           <mesh
             geometry={nodes.M740158_mesh_zipp.geometry}
             material={nodes.M740158_mesh_zipp.material}
-            // position={[0, -1.05, 4.19]}
-            // rotation={[-0.24, 0, 0]}
             scale={100}
           >
             <meshStandardMaterial
@@ -249,7 +240,6 @@ const ShirtComponent = ({ props, canvasRef }: ShirtProps) => {
               <texture attach='map' image={canvasRef} />
             </meshStandardMaterial>
           </mesh>
-          {/* <PerspectiveCamera ref={cam} position={[0, 0, 0]} /> */}
         </group>
         <Preload all />
         <BakeShadows />

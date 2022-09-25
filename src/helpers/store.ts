@@ -16,8 +16,6 @@ interface State {
     stepTwo: boolean
     stepThree: boolean
   }
-  canvas: MutableRefObject<any>
-  setCanvas: (param: MutableRefObject<any>) => void
   zoom: number
   setZoom: (value: number) => void
   zoomIn: boolean
@@ -64,12 +62,6 @@ const useStoreImpl = create<State>()((set) => ({
     set(() => ({ texture: data })),
   colorChanged: false,
   setColorChanged: (param) => set(() => ({ colorChanged: param })),
-  canvas: null,
-  setCanvas: (param: MutableRefObject<any>) =>
-    set((state) => {
-      state.canvas = param
-      return undefined
-    }),
   texturePath: 1,
   setTexturePath: (index) => set(() => ({ texturePath: index + 1 })),
   colors: [],

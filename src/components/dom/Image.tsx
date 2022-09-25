@@ -20,7 +20,7 @@ const ImageComponent = ({
   width,
   height,
   objectFit = 'none',
-  layout,
+  layout = 'fill',
   quality = 60,
   className,
   rootClass,
@@ -31,26 +31,30 @@ const ImageComponent = ({
     ['h-auto']: !height,
   })
 
-  return layout === 'fill' ? (
-    <div
-      className={containerClasses}
-      style={{
-        height: typeof height === 'number' ? `${height}px` : height,
-        width: typeof width === 'number' ? `${width}px` : width,
-        ...style,
-      }}
-    >
-      <Image
-        alt={alt}
-        src={src}
-        layout='fill'
-        objectFit={objectFit}
-        quality={quality}
-        className={className}
-        {...rest}
-      />
-    </div>
-  ) : (
+  if (layout === 'fill') {
+    return (
+      <div
+        className={containerClasses}
+        style={{
+          height: typeof height === 'number' ? `${height}px` : height,
+          width: typeof width === 'number' ? `${width}px` : width,
+          ...style,
+        }}
+      >
+        <Image
+          alt={alt}
+          src={src}
+          layout='fill'
+          objectFit={objectFit}
+          quality={quality}
+          className={className}
+          {...rest}
+        />
+      </div>
+    )
+  }
+
+  return (
     <Image
       alt={alt}
       src={src}

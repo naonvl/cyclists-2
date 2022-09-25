@@ -1,5 +1,5 @@
 import cn from 'clsx'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import CloseIcon from '@heroicons/react/24/outline/XMarkIcon'
 import { SketchPicker as ReactSketchPicker } from 'react-color'
 
@@ -16,6 +16,12 @@ const ColorPicker: React.FC<SketchPickerProps> = ({
     displayColorPicker: false,
     color: '',
   })
+
+  useEffect(() => {
+    if (!state.color) {
+      setState({ ...state, color: color })
+    }
+  }, [color, state])
 
   const handleClick = () => {
     return setState({
@@ -50,17 +56,17 @@ const ColorPicker: React.FC<SketchPickerProps> = ({
         <div
           className={colorClasses}
           style={{
-            background: `${color}`,
+            background: `${state.color}`,
           }}
         />
       </div>
       {state.displayColorPicker ? (
-        <div className='absolute z-50'>
+        <div className='fixed z-50 overflow-hidden'>
           <CloseIcon
             className='absolute w-5 h-5 text-gray-700 bg-white border border-b-0 border-gray-300 cursor-pointer -right-[1px] -top-[1.15rem]'
             onClick={handleClose}
           />
-          <ReactSketchPicker color={color} onChange={handleChange} />
+          <ReactSketchPicker color={state.color} onChange={handleChange} />
         </div>
       ) : null}
     </>

@@ -12,11 +12,9 @@ function Loader() {
           width={600}
           height={599}
           objectFit='cover'
-          className='z-[100]'
+          rootClass='z-30 -top-[14rem] -right-[56.5rem] md:-right-[66.5rem] lg:-right-[62rem]'
           style={{
             position: 'absolute',
-            top: '-14rem',
-            right: '-62rem',
           }}
           quality={60}
           priority={true}

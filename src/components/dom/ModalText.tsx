@@ -65,7 +65,7 @@ const ModalText = ({ open, setOpen, cancelButtonRef }: ModalProps) => {
         </Transition.Child>
 
         <div className='fixed inset-0 z-10 overflow-y-auto'>
-          <div className='flex items-end justify-center min-h-full p-4 text-center sm:items-center sm:p-0'>
+          <div className='flex items-center justify-center min-h-full p-4 text-center sm:items-center sm:p-0'>
             <Transition.Child
               as={Fragment}
               enter='ease-out duration-300'
@@ -99,7 +99,7 @@ const ModalText = ({ open, setOpen, cancelButtonRef }: ModalProps) => {
                   </div>
                 </div>
                 <div
-                  className='absolute top-0 right-0 flex items-center justify-center flex-shrink-0 w-12 h-12 mt-1 mr-3 rounded-full cursor-pointer sm:mx-0 sm:h-10 sm:w-10'
+                  className='absolute right-0 flex items-center justify-center flex-shrink-0 w-12 h-12 mt-1 mb-3 mr-3 rounded-full cursor-pointer -top-1 md:top-0 md:mb-0'
                   onClick={() => setOpen(false)}
                 >
                   <CloseIcon
@@ -124,7 +124,7 @@ const ModalText = ({ open, setOpen, cancelButtonRef }: ModalProps) => {
                     insert
                   </button>
                 </div>
-                {msg ? (
+                {msg.length > 0 ? (
                   <div className='flex items-center justify-center w-full px-6 my-2'>
                     <Text className='text-sm text-center text-red-500'>
                       {msg}

@@ -3,20 +3,18 @@ import { GetStaticProps } from 'next'
 import dynamic from 'next/dynamic'
 import { useState, useRef, useEffect, MouseEvent } from 'react'
 import { fabric } from 'fabric'
-import { useDetectGPU } from '@react-three/drei'
 import ArrowDownTrayIcon from '@heroicons/react/24/outline/ArrowDownTrayIcon'
+import CloseIcon from '@heroicons/react/24/outline/XMarkIcon'
+import { SketchPicker as ReactSketchPicker } from 'react-color'
 
 import useStore from '@/helpers/store'
 import Text from '@/components/dom/Text'
-
-import Loader from '@/components/canvas/Loader'
 
 import Navbar from '@/components/dom/Navbar'
 import Dropdowns from '@/components/dom/Dropdowns'
 import Image from '@/components/dom/Image'
 import ColorPicker from '@/components/dom/ColorPicker'
-import InputSelect from '@/components/dom/InputSelect'
-import { jerseyStyles, options } from '@/constants'
+import { jerseyStyles } from '@/constants'
 import InputNumber from '@/components/dom/InputNumber'
 import DropdownControls from '@/components/dom/DropdownControls'
 import loadSvg from '@/helpers/loadSvg'
@@ -36,7 +34,6 @@ const LCanvas = dynamic(() => import('@/components/layout/canvas'), {
 // dom components goes here
 const Page = (props) => {
   const canvasRef = useRef<fabric.Canvas | null>(null)
-  const GPUTier = useDetectGPU()
 
   const isAddText = useStore((state) => state.isAddText)
   const setIsAddText = useStore((state) => state.setIsAddText)
@@ -53,7 +50,6 @@ const Page = (props) => {
   const setIsLoading = useStore((state) => state.setIsLoading)
   const svgGroup = useStore((state) => state.svgGroup)
   const setColorChanged = useStore((state) => state.setColorChanged)
-  const canvas = useStore((state) => state.canvas)
   const colors = useStore((state) => state.colors)
   const setColors = useStore((state) => state.setColors)
   const setSvgGroup = useStore((state) => state.setSvgGroup)
@@ -86,25 +82,12 @@ const Page = (props) => {
       isLoading,
     })
 
-    // canvasRef.current = initCanvas({
-    //   width: texture.width,
-    //   height: texture.height,
-    // })
-
     // cleanup
     return () => {
       canvasRef.current?.dispose()
       canvasRef.current = null
     }
-  }, [
-    GPUTier,
-    canvasRef,
-    isLoading,
-    setColors,
-    setIsLoading,
-    setSvgGroup,
-    texture,
-  ])
+  }, [isLoading, setColors, setIsLoading, setSvgGroup, texture])
 
   useEffect(() => {
     switch (step) {
@@ -218,7 +201,6 @@ const Page = (props) => {
           <div className='fixed top-0 bottom-0 left-0 right-0 z-50 bg-black opacity-50' />
         ) : null}
         <div className='lg:w-1/2'>
-          {/* Mobile */}
           <div className='my-5 lg:hidden'>
             <div className='relative'>
               <DropdownControls
@@ -244,12 +226,20 @@ const Page = (props) => {
                 <ArrowDownTrayIcon className='w-5 h-5 text-gray-800' />
                 <span>save</span>
               </button>
+              {isAddText ? (
+                <div className='absolute w-[60%] top-[24rem] left-3 z-[100]'>
+                  <Text className='px-3 py-4 text-white bg-pink-500'>
+                    Place the text by clicking on the model
+                  </Text>
+                </div>
+              ) : null}
             </div>
-            {Page?.r3f ? (
+            {Page?.r3f && props.width <= 768 ? (
               <LCanvas
                 onClick={handleClickCanvas}
                 style={{
                   height: '543px',
+                  zIndex: isAddText ? '99' : '30',
                 }}
               >
                 {Page.r3f({ canvasRef })}
@@ -402,7 +392,7 @@ const Page = (props) => {
               onClick={(e: any) => handleOpen(e)}
               open={dropdownOpen.stepTwo}
               buttonName='Choose your colours'
-              rootClass='w-full mb-2'
+              rootClass='w-full mb-2 z-20'
               menuClass='w-full'
               menuBackground='bg-[#e5e5e5]'
               label='stepTwo'
@@ -415,17 +405,19 @@ const Page = (props) => {
                   >
                     <Text className='mr-auto text-xs text-gray-600'>
                       {data.id == 'base'
-                        ? `First choose the base colour`
+                        ? `Choose the base colour`
                         : `Choose accent colour ${data.id}`}
                     </Text>
-                    <ColorPicker
-                      color={data.fill}
-                      setCurrentColor={(e: string) => {
-                        svgGroup._objects[index].set('fill', e)
-                        canvasRef.current?.renderAll()
-                        setColorChanged(true)
-                      }}
-                    />
+                    <div className='relative'>
+                      <ColorPicker
+                        color={data.fill}
+                        setCurrentColor={(e: string) => {
+                          svgGroup._objects[index].set('fill', e)
+                          canvasRef.current?.renderAll()
+                          setColorChanged(true)
+                        }}
+                      />
+                    </div>
                   </div>
                 ))}
               </div>
@@ -444,58 +436,11 @@ const Page = (props) => {
                   <button
                     onClick={() => setOpenTextModal(true)}
                     type='button'
-                    className="px-4 py-3 text-sm text-white uppercase bg-pink-500 before:content-[' '] before:w-[30%] before:h-[3px] before:bg-pink-300 before:absolute before:left-6 before:top-7 after:content-[' after:w-[30%] after:h-[3px] after:bg-pink-300 after:absolute after:right-6 after:top-7 hover:bg-pink-600"
+                    className="px-4 py-3 text-sm text-white uppercase bg-pink-500 before:content-[' '] before:w-[25%] md:before:w-[30%] before:h-[3px] before:bg-pink-300 before:absolute before:left-6 before:top-7 after:content-[' after:w-[25%] md:after:w-[30%] after:h-[3px] after:bg-pink-300 after:absolute after:right-6 after:top-7 hover:bg-pink-600"
                   >
                     create text
                   </button>
                 </div>
-                {/* <div className='inline-flex flex-col mb-2'>
-                  <label
-                    htmlFor='addName'
-                    className='mb-1 font-bold text-gray-700'
-                  >
-                    Enter the name you want to add
-                  </label>
-                  <input
-                    id='addName'
-                    type='text'
-                    className='px-3 py-2 text-black border border-black placeholder:text-gray-700 focus:border-pink-500 focus:ring-pink-500'
-                    onChange={handleChange}
-                    placeholder='Type your name'
-                    name='name'
-                    value={addStep.name}
-                  />
-                </div>
-                <div className='inline-flex flex-col mb-3'>
-                  <label
-                    htmlFor='fontSize'
-                    className='mb-1 font-bold text-gray-700'
-                  >
-                    Font Size
-                  </label>
-                  <input
-                    id='fontSize'
-                    type='range'
-                    step='1'
-                    min='1'
-                    max='75'
-                    name='fontSize'
-                    value={addStep.fontSize}
-                    onChange={handleChange}
-                    className='w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer range-lg'
-                  ></input>
-                </div>
-                <div className='inline-flex flex-col mb-5'>
-                  <InputSelect
-                    name='fontFamily'
-                    value={addStep.fontFamily}
-                    defaultValue='Roboto'
-                    defaultOption='Choose your font'
-                    label='Font'
-                    id='fontFamily'
-                    options={options}
-                  />
-                </div> */}
               </div>
             </Dropdowns>
           </div>
@@ -613,8 +558,7 @@ const Page = (props) => {
               </div>
             ) : null}
           </div>
-          {/* Model */}
-          {Page?.r3f && !GPUTier.isMobile ? (
+          {Page?.r3f && props.width > 768 ? (
             <LCanvas
               onClick={handleClickCanvas}
               style={{
@@ -678,8 +622,6 @@ Page.r3f = ({ canvasRef }) => (
   </>
 )
 
-export default Page
-
 export const getStaticProps: GetStaticProps = async () => {
   return {
     props: {
@@ -688,3 +630,5 @@ export const getStaticProps: GetStaticProps = async () => {
     },
   }
 }
+
+export default Page

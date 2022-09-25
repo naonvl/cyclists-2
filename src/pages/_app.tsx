@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import { setState } from '@/helpers/store'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Header from '@/config'
 import Dom from '@/components/layout/dom'
 import '@/styles/index.css'
@@ -12,8 +12,10 @@ import dynamic from 'next/dynamic'
 
 function App({ Component, pageProps = { title: 'index' } }) {
   const router = useRouter()
+  const [width, setWidth] = useState<number | null>(null)
 
   useEffect(() => {
+    setWidth(window.innerWidth)
     setState({ router })
   }, [router])
 
@@ -21,7 +23,7 @@ function App({ Component, pageProps = { title: 'index' } }) {
     <>
       <Header title={pageProps.title} />
       <Dom>
-        <Component {...pageProps} />
+        <Component width={width} {...pageProps} />
       </Dom>
       {/* {Component?.r3f && <LCanvas>{Component.r3f(pageProps)}</LCanvas>} */}
     </>
