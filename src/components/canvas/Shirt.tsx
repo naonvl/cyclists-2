@@ -59,6 +59,7 @@ const ShirtComponent = ({ props, canvasRef }: ShirtProps) => {
 
   const colorChanged = useStore((state) => state.colorChanged)
   const setColorChanged = useStore((state) => state.setColorChanged)
+  const isAddText = useStore((state) => state.isAddText)
 
   // Textures
   const [normalMap] = useLoader(TextureLoader, ['/textures/Jersey_NORMAL.png'])
@@ -123,8 +124,14 @@ const ShirtComponent = ({ props, canvasRef }: ShirtProps) => {
       changeRotateLeft(false)
     }
 
-    state.gl.domElement.style.cursor = hovered ? 'grab' : 'auto'
-    state.gl.domElement.style.cursor = clicked ? 'grabbing' : 'grab'
+    if (isAddText) {
+      state.gl.domElement.style.cursor = 'crosshair'
+    }
+
+    if (!isAddText) {
+      state.gl.domElement.style.cursor = hovered ? 'grab' : 'auto'
+      state.gl.domElement.style.cursor = clicked ? 'grabbing' : 'grab'
+    }
   })
   // Return the view, these are regular Threejs elements expressed in JSX
   return (

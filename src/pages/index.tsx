@@ -20,6 +20,7 @@ import { jerseyStyles, options } from '@/constants'
 import InputNumber from '@/components/dom/InputNumber'
 import DropdownControls from '@/components/dom/DropdownControls'
 import loadSvg from '@/helpers/loadSvg'
+import ModalText from '@/components/dom/ModalText'
 
 // Dynamic import is used to prevent a payload when the website start that will include threejs r3f etc..
 // WARNING ! errors might get obfuscated by using dynamic import.
@@ -37,6 +38,8 @@ const Page = (props) => {
   const canvasRef = useRef<fabric.Canvas | null>(null)
   const GPUTier = useDetectGPU()
 
+  const isAddText = useStore((state) => state.isAddText)
+  const setIsAddText = useStore((state) => state.setIsAddText)
   const changeZoomIn = useStore((state) => state.changeZoomIn)
   const changeZoomOut = useStore((state) => state.changeZoomOut)
   const texture = useStore((state) => state.texture)
@@ -56,7 +59,9 @@ const Page = (props) => {
   const setSvgGroup = useStore((state) => state.setSvgGroup)
 
   const inputNumberRef = useRef<HTMLInputElement>(null)
+  const cancelModalTextRef = useRef(null)
 
+  const [openTextModal, setOpenTextModal] = useState(false)
   const [step, setStep] = useState(1)
   const [order, setOrder] = useState(1)
 
@@ -194,6 +199,10 @@ const Page = (props) => {
     }
   }
 
+  const handleClickCanvas = () => {
+    setIsAddText(false)
+  }
+
   return (
     <>
       <Navbar />
@@ -205,6 +214,9 @@ const Page = (props) => {
       </div>
 
       <div className='flex flex-col px-4 mx-auto lg:px-16 lg:flex-row max-w-[1400px]'>
+        {isAddText ? (
+          <div className='fixed top-0 bottom-0 left-0 right-0 z-50 bg-black opacity-50' />
+        ) : null}
         <div className='lg:w-1/2'>
           {/* Mobile */}
           <div className='my-5 lg:hidden'>
@@ -235,6 +247,7 @@ const Page = (props) => {
             </div>
             {Page?.r3f ? (
               <LCanvas
+                onClick={handleClickCanvas}
                 style={{
                   height: '543px',
                 }}
@@ -429,6 +442,7 @@ const Page = (props) => {
               <div className='flex flex-col w-full overflow-hidden'>
                 <div className='mx-auto'>
                   <button
+                    onClick={() => setOpenTextModal(true)}
                     type='button'
                     className="px-4 py-3 text-sm text-white uppercase bg-pink-500 before:content-[' '] before:w-[30%] before:h-[3px] before:bg-pink-300 before:absolute before:left-6 before:top-7 after:content-[' after:w-[30%] after:h-[3px] after:bg-pink-300 after:absolute after:right-6 after:top-7 hover:bg-pink-600"
                   >
@@ -591,13 +605,22 @@ const Page = (props) => {
               <ArrowDownTrayIcon className='w-5 h-5 text-gray-800' />
               <span>save</span>
             </button>
+            {isAddText ? (
+              <div className='absolute w-[45%] top-[24rem] left-3 z-[100]'>
+                <Text className='px-3 py-4 text-white bg-pink-500'>
+                  Place the text by clicking on the model
+                </Text>
+              </div>
+            ) : null}
           </div>
           {/* Model */}
           {Page?.r3f && !GPUTier.isMobile ? (
             <LCanvas
+              onClick={handleClickCanvas}
               style={{
                 width: '596px',
                 height: '543px',
+                zIndex: isAddText ? '99' : '30',
               }}
             >
               {Page.r3f({ canvasRef })}
@@ -636,7 +659,13 @@ const Page = (props) => {
           </div>
         </div>
       </div>
+
       <canvas id='canvas' style={{ display: 'none' }} />
+      <ModalText
+        open={openTextModal}
+        setOpen={setOpenTextModal}
+        cancelButtonRef={cancelModalTextRef}
+      />
     </>
   )
 }

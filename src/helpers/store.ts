@@ -46,11 +46,15 @@ interface State {
     height: number
   }
   setTexture: (data: { path: number; width: number; height: number }) => void
+  isAddText: boolean
+  setIsAddText: (param: boolean) => void
   router: NextRouter
   dom: MutableRefObject<any>
 }
 
 const useStoreImpl = create<State>()((set) => ({
+  isAddText: false,
+  setIsAddText: (param) => set(() => ({ isAddText: param })),
   texture: {
     path: 1,
     width: 2048,

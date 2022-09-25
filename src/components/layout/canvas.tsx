@@ -1,7 +1,7 @@
 import { Canvas } from '@react-three/fiber'
 import { Preload } from '@react-three/drei'
 
-const LCanvas = ({ children, style }) => {
+const LCanvas = ({ children, style, onClick }) => {
   return (
     <Canvas
       frameloop='demand'
@@ -9,6 +9,7 @@ const LCanvas = ({ children, style }) => {
       camera={{ position: [0, 0, 500], fov: 30 }}
       style={style}
       gl={{ preserveDrawingBuffer: true }}
+      onClick={onClick}
       id='rendered'
     >
       {/* <LControl /> */}

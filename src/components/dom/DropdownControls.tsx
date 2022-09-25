@@ -31,7 +31,7 @@ const DropdownControls: React.FC<DropdownsProps> = ({
   const [open, setOpen] = useState<boolean>(true)
 
   const rootClasses = cn(
-    'absolute z-50 top-[13rem] lg:top-[8rem] inline-block tezt-left',
+    'absolute z-30 top-[13rem] lg:top-[8rem] inline-block tezt-left',
     rootClass
   )
   const menuClasses = cn(
