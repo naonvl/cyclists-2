@@ -44,7 +44,7 @@ const ColorPicker: React.FC<SketchPickerProps> = ({
   return (
     <>
       <div
-        className='inline-block bg-white cursor-pointer p-[5px] rounded-[1px] shadow-[0_0_0_1px_rgba(0,0,0,0.1)]'
+        className='inline-block my-2 mr-auto bg-white cursor-pointer p-[5px] rounded-[1px] shadow-[0_0_0_1px_rgba(0,0,0,0.1)]'
         onClick={handleClick}
       >
         <div

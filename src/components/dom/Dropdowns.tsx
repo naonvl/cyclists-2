@@ -10,6 +10,7 @@ interface DropdownsProps {
   buttonClass?: string
   children?: React.ReactNode | string
   buttonName: React.ReactNode | string
+  menuBackground?: string
   onClick: (e: any) => void
   open: boolean
   label: string
@@ -21,6 +22,7 @@ const Dropdowns: React.FC<DropdownsProps> = ({
   buttonClass,
   children,
   buttonName,
+  menuBackground,
   onClick,
   open,
   label,
@@ -28,8 +30,14 @@ const Dropdowns: React.FC<DropdownsProps> = ({
   const buttonRef = useRef(null)
   const rootClasses = cn('relative inline-block text-left', rootClass)
   const menuClasses = cn(
-    'right-0 bg-white origin-top-right rounded-md focus:outline-none',
-    menuClass
+    'right-0 origin-top-right focus:outline-none',
+    menuClass,
+    {
+      [menuBackground]: menuBackground,
+    },
+    {
+      ['bg-white rounded-md']: !menuBackground,
+    }
   )
   const buttonClasses = cn(
     'z-10 inline-flex justify-between w-full px-4 py-2 text-sm font-medium text-white uppercase bg-black border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:ring-offset-gray-100',

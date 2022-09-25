@@ -45,6 +45,13 @@ const loadSvg = ({
       setSvgGroup(svgData)
 
       for (let i = 0; i < svgData._objects.length; i++) {
+        if (svgData._objects[i].id === 'base') {
+          colors[0] = {
+            id: svgData._objects[i].id,
+            fill: svgData._objects[i].fill,
+          }
+        }
+
         colors[i] = {
           id: svgData._objects[i].id,
           fill: svgData._objects[i].fill,

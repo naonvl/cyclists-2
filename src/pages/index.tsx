@@ -339,12 +339,12 @@ const Page = (props) => {
             </div>
           </div>
 
-          <div className='my-5'>
+          <div className='mt-4 mb-1'>
             <Dropdowns
               onClick={(e: any) => handleOpen(e)}
               open={dropdownOpen.stepOne}
               buttonName='Choose your style'
-              rootClass='w-full'
+              rootClass='w-full mb-2'
               menuClass='w-full'
               label='stepOne'
             >
@@ -389,16 +389,22 @@ const Page = (props) => {
               onClick={(e: any) => handleOpen(e)}
               open={dropdownOpen.stepTwo}
               buttonName='Choose your colours'
-              rootClass='w-full'
+              rootClass='w-full mb-2'
               menuClass='w-full'
+              menuBackground='bg-[#e5e5e5]'
               label='stepTwo'
             >
-              <div className='flex flex-col overflow-hidden'>
+              <div className='overflow-hidden grid grid-cols-3 gap-3'>
                 {colors.map((data, index) => (
                   <div
                     key={index}
-                    className='inline-flex items-center justify-between w-full'
+                    className='inline-flex flex-col items-center justify-between w-full'
                   >
+                    <Text className='mr-auto text-xs text-gray-600'>
+                      {data.id == 'base'
+                        ? `First choose the base colour`
+                        : `Choose accent colour ${data.id}`}
+                    </Text>
                     <ColorPicker
                       color={data.fill}
                       setCurrentColor={(e: string) => {
@@ -406,24 +412,6 @@ const Page = (props) => {
                         canvasRef.current?.renderAll()
                         setColorChanged(true)
                       }}
-                    />
-                    <Text className='font-bold text-gray-600'>
-                      {data.id} or{' '}
-                      <span className='underline cursor-pointer'>
-                        Choose Pattern
-                      </span>
-                    </Text>
-                    <Image
-                      alt='Cyclist Cusotm Jersey'
-                      src='/icons/kein-muster.svg'
-                      width='100%'
-                      height={35}
-                      style={{
-                        maxWidth: '60px',
-                      }}
-                      objectFit='contain'
-                      layout='fill'
-                      quality={60}
                     />
                   </div>
                 ))}
@@ -434,7 +422,7 @@ const Page = (props) => {
               onClick={(e: any) => handleOpen(e)}
               open={dropdownOpen.stepThree}
               buttonName='Add text'
-              rootClass='w-full'
+              rootClass='w-full mb-2'
               menuClass='w-full'
               label='stepThree'
             >
@@ -490,7 +478,7 @@ const Page = (props) => {
             </Dropdowns>
           </div>
 
-          <div className='my-3'>
+          <div className='mb-3'>
             <div className='p-3 bg-pink-200'>
               <Text className='text-xs font-bold text-black uppercase'>
                 Need a custom design for your club, company or team? we can give

@@ -29,7 +29,6 @@ const withImages = require('next-images')
 const withTM = require('next-transpile-modules')(['three'])
 
 const nextConfig = {
-  reactStricMode: true,
   webpack(config, { isServer }) {
     // audio support
     config.module.rules.push({
