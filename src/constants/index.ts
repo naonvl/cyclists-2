@@ -17,12 +17,6 @@ export const jerseyStyles = [
     width: 2048,
     height: 2048,
   },
-  {
-    text: 'Bubbles',
-    image: '/thumbnails/bubbles_front_2022.jpg',
-    width: 1024,
-    height: 1024,
-  },
 ]
 
 export const options = [
