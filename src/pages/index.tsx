@@ -239,7 +239,7 @@ const Page = (props) => {
                 onClick={handleClickCanvas}
                 style={{
                   height: '543px',
-                  zIndex: isAddText ? '99' : '30',
+                  zIndex: isAddText ? '99' : '20',
                 }}
               >
                 {Page.r3f({ canvasRef })}
@@ -564,7 +564,7 @@ const Page = (props) => {
               style={{
                 width: '596px',
                 height: '543px',
-                zIndex: isAddText ? '99' : '30',
+                zIndex: isAddText ? '99' : '20',
               }}
             >
               {Page.r3f({ canvasRef })}
