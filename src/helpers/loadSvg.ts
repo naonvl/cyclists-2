@@ -1,6 +1,8 @@
 import { MutableRefObject } from 'react'
 import { fabric } from 'fabric'
 
+import addText from '@/helpers/addText'
+
 interface LoadSVGProps {
   texture: {
     path: number
@@ -61,6 +63,7 @@ const loadSvg = ({
         canvas.current.add(svgData)
         canvas.current.sendToBack(svgData)
         canvas.current.renderAll()
+        // addText({ text: 'Nigel', canvasRef: canvas })
         setIsLoading(false)
       }
     }

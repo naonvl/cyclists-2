@@ -4,12 +4,10 @@ import dynamic from 'next/dynamic'
 import { useState, useRef, useEffect, MouseEvent } from 'react'
 import { fabric } from 'fabric'
 import ArrowDownTrayIcon from '@heroicons/react/24/outline/ArrowDownTrayIcon'
-import CloseIcon from '@heroicons/react/24/outline/XMarkIcon'
-import { SketchPicker as ReactSketchPicker } from 'react-color'
 
 import useStore from '@/helpers/store'
-import Text from '@/components/dom/Text'
 
+import Text from '@/components/dom/Text'
 import Navbar from '@/components/dom/Navbar'
 import Dropdowns from '@/components/dom/Dropdowns'
 import Image from '@/components/dom/Image'
@@ -19,6 +17,7 @@ import InputNumber from '@/components/dom/InputNumber'
 import DropdownControls from '@/components/dom/DropdownControls'
 import loadSvg from '@/helpers/loadSvg'
 import ModalText from '@/components/dom/ModalText'
+import Color from '@/components/dom/Color'
 
 // Dynamic import is used to prevent a payload when the website start that will include threejs r3f etc..
 // WARNING ! errors might get obfuscated by using dynamic import.
@@ -347,7 +346,7 @@ const Page = (props) => {
               onClick={(e: any) => handleOpen(e)}
               open={dropdownOpen.stepOne}
               buttonName='Choose your style'
-              rootClass='w-full mb-2'
+              rootClass='w-full mb-2 z-0'
               menuClass='w-full'
               label='stepOne'
             >
@@ -392,12 +391,12 @@ const Page = (props) => {
               onClick={(e: any) => handleOpen(e)}
               open={dropdownOpen.stepTwo}
               buttonName='Choose your colours'
-              rootClass='w-full mb-2 z-20'
+              rootClass='w-full mb-2 z-40'
               menuClass='w-full'
               menuBackground='bg-[#e5e5e5]'
               label='stepTwo'
             >
-              <div className='overflow-hidden grid grid-cols-3 gap-3'>
+              <div className='grid grid-cols-3 gap-3'>
                 {colors.map((data, index) => (
                   <div
                     key={index}
@@ -409,7 +408,7 @@ const Page = (props) => {
                         : `Choose accent colour ${data.id}`}
                     </Text>
                     <div className='relative'>
-                      <ColorPicker
+                      <Color
                         color={data.fill}
                         setCurrentColor={(e: string) => {
                           svgGroup._objects[index].set('fill', e)
@@ -417,6 +416,14 @@ const Page = (props) => {
                           setColorChanged(true)
                         }}
                       />
+                      {/* <ColorPicker
+                        color={data.fill}
+                        setCurrentColor={(e: string) => {
+                          svgGroup._objects[index].set('fill', e)
+                          canvasRef.current?.renderAll()
+                          setColorChanged(true)
+                        }}
+                      /> */}
                     </div>
                   </div>
                 ))}
@@ -427,7 +434,7 @@ const Page = (props) => {
               onClick={(e: any) => handleOpen(e)}
               open={dropdownOpen.stepThree}
               buttonName='Add text'
-              rootClass='w-full mb-2'
+              rootClass='w-full mb-2 z-0'
               menuClass='w-full'
               label='stepThree'
             >

@@ -124,8 +124,11 @@ const ShirtComponent = ({ props, canvasRef }: ShirtProps) => {
       changeRotateLeft(false)
     }
 
-    if (isAddText) {
+    if (canvasRef.current && isAddText) {
       state.gl.domElement.style.cursor = 'crosshair'
+      canvasRef.current.on('mouse:over', (opt) => {
+        console.log(opt)
+      })
     }
 
     if (!isAddText) {
