@@ -15,11 +15,19 @@ interface ModalProps {
   open: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
   cancelButtonRef: MutableRefObject<any>
+  setText: any
+  text: string
 }
 
-const ModalText = ({ open, setOpen, cancelButtonRef }: ModalProps) => {
+const ModalText = ({
+  open,
+  setOpen,
+  cancelButtonRef,
+  setText,
+  text,
+}: ModalProps) => {
   const setIsAddText = useStore((state) => state.setIsAddText)
-  const [text, setText] = useState('')
+
   const [msg, setMsg] = useState('')
 
   useEffect(() => {

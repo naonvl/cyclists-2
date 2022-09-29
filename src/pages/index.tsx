@@ -1,7 +1,7 @@
 import cn from 'clsx'
 import { GetStaticProps } from 'next'
 import dynamic from 'next/dynamic'
-import { useState, useRef, useEffect, MouseEvent } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { fabric } from 'fabric'
 import ArrowDownTrayIcon from '@heroicons/react/24/outline/ArrowDownTrayIcon'
 
@@ -16,8 +16,10 @@ import { jerseyStyles } from '@/constants'
 import InputNumber from '@/components/dom/InputNumber'
 import DropdownControls from '@/components/dom/DropdownControls'
 import loadSvg from '@/helpers/loadSvg'
+import addText from '@/helpers/addText'
 import ModalText from '@/components/dom/ModalText'
 import Color from '@/components/dom/Color'
+import THREE from 'three'
 
 // Dynamic import is used to prevent a payload when the website start that will include threejs r3f etc..
 // WARNING ! errors might get obfuscated by using dynamic import.
@@ -52,11 +54,11 @@ const Page = (props) => {
   const colors = useStore((state) => state.colors)
   const setColors = useStore((state) => state.setColors)
   const setSvgGroup = useStore((state) => state.setSvgGroup)
-
   const inputNumberRef = useRef<HTMLInputElement>(null)
+  const [text, setText] = useState('')
   const cancelModalTextRef = useRef(null)
-
   const [openTextModal, setOpenTextModal] = useState(false)
+  const [ray, setRay] = useState({ x: 1, y: 1, z: 1 })
   const [step, setStep] = useState(1)
   const [order, setOrder] = useState(1)
 
@@ -70,7 +72,6 @@ const Page = (props) => {
     fontSize: 16,
     fontFamily: 'Roboto',
   })
-
   useEffect(() => {
     loadSvg({
       texture: texture,
@@ -80,7 +81,6 @@ const Page = (props) => {
       setColors,
       isLoading,
     })
-
     // cleanup
     return () => {
       canvasRef.current?.dispose()
@@ -164,7 +164,7 @@ const Page = (props) => {
     setStep(step + 1)
   }
 
-  const handleOpen = (e: MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleOpen = (e: any) => {
     const label: string | null = e.currentTarget.ariaLabel
 
     if (label === null) return null
@@ -183,6 +183,14 @@ const Page = (props) => {
 
   const handleClickCanvas = () => {
     setIsAddText(false)
+    if (isAddText) {
+      addText({
+        text: text,
+        canvasRef: canvasRef,
+        left: ray.x * 2048,
+        top: ray.y * 2048,
+      })
+    }
   }
 
   return (
@@ -241,7 +249,7 @@ const Page = (props) => {
                   zIndex: isAddText ? '99' : '20',
                 }}
               >
-                {Page.r3f({ canvasRef })}
+                {Page.r3f({ canvasRef, setRay })}
               </LCanvas>
             ) : null}
           </div>
@@ -515,6 +523,24 @@ const Page = (props) => {
               ref={inputNumberRef}
             />
             <button
+              onClick={() => {
+                let data = {
+                  order: {
+                    line_items: [{ variant_id: 447654529, quantity: 1 }],
+                  },
+                }
+                fetch('http://localhost:3000/api/order', {
+                  method: 'POST',
+                  // headers: {
+                  //   Accept: 'application/json',
+                  //   'Content-Type': 'application/json',
+                  //   'Access-Control-Allow-Origin': '*',
+                  //   'X-Shopify-Access-Token':
+                  //     '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',
+                  // },
+                  body: JSON.stringify(data),
+                }).then((response) => console.log(response))
+              }}
               type='button'
               className={cn(
                 'w-full px-4 text-center py-3 text-sm uppercase bg-pink-600 border border-pink-600 text-white my-2 hover:border hover:border-black hover:bg-white hover:text-black'
@@ -574,7 +600,7 @@ const Page = (props) => {
                 zIndex: isAddText ? '99' : '20',
               }}
             >
-              {Page.r3f({ canvasRef })}
+              {Page.r3f({ canvasRef, setRay })}
             </LCanvas>
           ) : null}
           <div className='items-center justify-center hidden w-full my-2 ml-auto lg:flex gap-3'>
@@ -616,6 +642,8 @@ const Page = (props) => {
         open={openTextModal}
         setOpen={setOpenTextModal}
         cancelButtonRef={cancelModalTextRef}
+        text={text}
+        setText={setText}
       />
     </>
   )
@@ -623,9 +651,9 @@ const Page = (props) => {
 
 // canvas components goes here
 // It will receive same props as Page component (from getStaticProps, etc.)
-Page.r3f = ({ canvasRef }) => (
+Page.r3f = ({ canvasRef, setRay }) => (
   <>
-    <Shirt canvasRef={canvasRef} />
+    <Shirt canvasRef={canvasRef} setRay={setRay} />
   </>
 )
 

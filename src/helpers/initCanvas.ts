@@ -6,6 +6,7 @@ interface InitCanvasProps {
 }
 
 const initCanvas = ({ width, height }: InitCanvasProps) => {
+
   return new fabric.Canvas('canvas', {
     preserveObjectStacking: true,
     width: width,

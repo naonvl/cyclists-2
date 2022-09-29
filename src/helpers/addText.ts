@@ -4,15 +4,17 @@ import { MutableRefObject } from 'react'
 interface AddTextProps {
   text: string
   canvasRef: MutableRefObject<fabric.Canvas | null>
+  left: number
+  top: number
 }
 
-const addText = ({ text, canvasRef }: AddTextProps) => {
+const addText = ({ text, canvasRef, left, top }: AddTextProps) => {
   const jerseyText = new fabric.IText(text, {
     fontSize: 30,
     textAlign: 'center',
     fontWeight: 'bold',
-    left: 500,
-    top: 220,
+    left: left,
+    top: top,
     originX: 'center',
     originY: 'center',
     selectable: true,
@@ -21,9 +23,9 @@ const addText = ({ text, canvasRef }: AddTextProps) => {
   })
 
   if (canvasRef.current) {
-    jerseyText.enterEditing()
+    canvasRef.current.add(jerseyText)
+    canvasRef.current.setActiveObject(jerseyText)
     canvasRef.current.renderAll()
-    console.log(canvasRef.current.getActiveObject())
   }
 }
 
