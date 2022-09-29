@@ -195,7 +195,7 @@ const Page = (props) => {
 
   return (
     <>
-      {/* <Navbar /> */}
+      <Navbar />
 
       {/* <div className='px-4 py-2 bg-[#f9f9f9] lg:px-16 lg:py-4'>
         <Text className='text-xs'>
