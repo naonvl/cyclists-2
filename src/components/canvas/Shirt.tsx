@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /* eslint-disable no-var */
 import * as THREE from 'three'
 import { useFrame, useLoader, useThree } from '@react-three/fiber'
@@ -18,6 +17,7 @@ import {
   BakeShadows,
   AdaptiveEvents,
 } from '@react-three/drei'
+import React from 'react'
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -66,7 +66,8 @@ const ShirtComponent = ({ props, canvasRef, setRay }: ShirtProps) => {
   var raycaster = new THREE.Raycaster()
   var mouse = new THREE.Vector2()
   const [getUv, setGetUv] = useState() as any
-  var raycastContainer = document.getElementById('rendered')
+  var raycastContainer =
+    document.getElementById('rendered').children[0].childNodes[0]
   var onClickPosition = new THREE.Vector2()
   // Textures
   const [normalMap] = useLoader(TextureLoader, ['/textures/Jersey_NORMAL.png'])
@@ -86,7 +87,7 @@ const ShirtComponent = ({ props, canvasRef, setRay }: ShirtProps) => {
     } else {
       fabric.Object.prototype.cornerSize = 12
     }
-    fabric.Canvas.prototype.getPointer = ((e, ignoreZoom) => {
+    fabric.Canvas.prototype.getPointer = (e, ignoreZoom) => {
       if (canvasRef.current._absolutePointer && !ignoreZoom) {
         return canvasRef.current._absolutePointer
       }
@@ -181,10 +182,38 @@ const ShirtComponent = ({ props, canvasRef, setRay }: ShirtProps) => {
         x: pointer.x * cssScale.width,
         y: pointer.y * cssScale.height,
       }
-    })(fabric.Canvas.prototype.getPointer)
+    }
+
+    // canvasRef.current.on('mouse:down', (e) => {
+    //   console.log(e)
+    // })
   }
-  useEffect(() => {
-    initPatch()
+  const inputRef = React.useRef(null)
+
+  const handleClick = (e) => {
+    const positionOnScene = getPositionOnScene(raycastContainer, e)
+    if (positionOnScene) {
+      const canvasRect = canvasRef.current._offset
+      const simEvt = new MouseEvent(e.type, {
+        clientX: canvasRect.left + positionOnScene.x,
+        clientY: canvasRect.top + positionOnScene.y,
+      })
+
+      canvasRef.current.upperCanvasEl.dispatchEvent(simEvt)
+    }
+  }
+  useFrame(() => {
+    // initPatch()
+    ;(raycastContainer as HTMLElement).addEventListener('mousedown', (e) => {
+      handleClick(e)
+    })
+    ;(canvasRef.current as any).on('mouse:down', (e) => {
+      // if (e.target._objects == undefined) {
+      //   controlsRef.current.enabled = false
+      // } else {
+      //   controlsRef.current.enabled = true
+      // }
+    })
   })
 
   const { nodes } = useGLTF('/model/n-cycling-jersey.drc.glb') as GLTFResult
@@ -236,7 +265,6 @@ const ShirtComponent = ({ props, canvasRef, setRay }: ShirtProps) => {
       textureRef.current.anisotropy = gl.capabilities.getMaxAnisotropy()
       textureRef.current.needsUpdate = true
       textureRef.current.flipY = false
-      textureRef.current.needsUpdate = true
       canvasRef.current.renderAll()
     }
 
@@ -349,16 +377,9 @@ const ShirtComponent = ({ props, canvasRef, setRay }: ShirtProps) => {
             />
           </mesh>
           <mesh
+            ref={inputRef}
             onClick={(e: any) => {
-              const positionOnScene = getPositionOnScene(raycastContainer, e)
-              if (positionOnScene) {
-                const canvasRect = canvasRef.current._offset
-                const simEvt = new MouseEvent(e.type, {
-                  clientX: canvasRect.left + positionOnScene.x * 1,
-                  clientY: canvasRect.top + positionOnScene.y * 1,
-                })
-                canvasRef.current.upperCanvasEl.dispatchEvent(simEvt)
-              }
+              handleClick(e)
             }}
             geometry={nodes.M740158_mesh_out.geometry}
             material={nodes.M740158_mesh_out.material}

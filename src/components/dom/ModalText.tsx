@@ -30,12 +30,12 @@ const ModalText = ({
 
   const [msg, setMsg] = useState('')
 
-  useEffect(() => {
-    return () => {
-      setMsg('')
-      setText('')
-    }
-  }, [])
+  // useEffect(() => {
+  //   return () => {
+  //     setMsg('')
+  //     setText('')
+  //   }
+  // })
 
   const handleChangeText = (e: any) => {
     setText(e.target.value)

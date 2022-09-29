@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic'
 import { useState, useRef, useEffect } from 'react'
 import { fabric } from 'fabric'
 import ArrowDownTrayIcon from '@heroicons/react/24/outline/ArrowDownTrayIcon'
-
+import { getProductsInCollection } from '../lib/shopify'
 import useStore from '@/helpers/store'
 
 import Text from '@/components/dom/Text'
@@ -195,13 +195,13 @@ const Page = (props) => {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
 
-      <div className='px-4 py-2 bg-[#f9f9f9] lg:px-16 lg:py-4'>
+      {/* <div className='px-4 py-2 bg-[#f9f9f9] lg:px-16 lg:py-4'>
         <Text className='text-xs'>
           Home | Jersey Customiser. Your jersey just the way you want it.
         </Text>
-      </div>
+      </div> */}
 
       <div className='flex flex-col px-4 mx-auto lg:px-16 lg:flex-row max-w-[1400px]'>
         {isAddText ? (
@@ -526,20 +526,28 @@ const Page = (props) => {
               onClick={() => {
                 let data = {
                   order: {
-                    line_items: [{ variant_id: 447654529, quantity: 1 }],
+                    line_items: [
+                      {
+                        variant_id: 42289624973511,
+                        quantity: 1,
+                      },
+                    ],
+                    email: 'natestudio23@gmail.com',
+                    customer: {
+                      id: 6147063087303,
+                    },
+                    note: 'JERSEY-DESIGNER',
                   },
                 }
-                fetch('http://localhost:3000/api/order', {
-                  method: 'POST',
-                  // headers: {
-                  //   Accept: 'application/json',
-                  //   'Content-Type': 'application/json',
-                  //   'Access-Control-Allow-Origin': '*',
-                  //   'X-Shopify-Access-Token':
-                  //     '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',
-                  // },
-                  body: JSON.stringify(data),
-                }).then((response) => console.log(response))
+                fetch(
+                  'https://39e4-180-244-130-245.ap.ngrok.io/api/createorder',
+                  {
+                    method: 'POST',
+                    body: JSON.stringify(data),
+                  }
+                ).then((data) => {
+                  console.log(data) // JSON data parsed by `data.json()` call
+                })
               }}
               type='button'
               className={cn(
